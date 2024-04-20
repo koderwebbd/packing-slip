@@ -1,0 +1,433 @@
+<div class="wrapper">
+  <div class="header">
+    <div class="shop-title">
+      <p class="to-uppercase">
+        <img src="https://cdn.shopify.com/s/files/1/0521/6852/3959/files/Warner_Safari_With_Words_No_Website_Logo_black.png?v=1713317019" width="200" />
+      </p>
+      
+      <div class="shipping-depertment">
+        Shipping Department
+        <br>
+        {{ shop_address.address1 }}, 
+        <br>
+        {{ shop_address.city }}, {{ shop_address.province_code }}, {{ shop_address.zip }} {{ shop_address.country_code }}
+      </div>
+    </div>
+    
+    <div class="order-title">
+      <p class="packing-heading text-align-right">
+        Packing Slip
+      </p>
+      <p class="text-align-right">
+        Order Date: {{ order.created_at | date: "%B %e, %Y" }}
+      </p>
+      <p class="text-align-right">
+        Order {{ order.name }}
+      </p>
+      
+    </div>
+  </div>
+  <hr>
+  <div class="customer-addresses">
+    <div class="shipping-address">
+      <p class="subtitle-bold to-uppercase">
+        Ship to
+      </p>
+      <p class="address-detail">
+        {% if shipping_address != blank %}
+          {{ shipping_address.name }}
+          {% if shipping_address.company != blank %}
+            <br>
+            {{ shipping_address.company }}
+          {% endif %}
+          {{ shipping_address.address1 }}
+          {% if shipping_address.address2 != blank %}
+            <br>
+            {{ shipping_address.address2 }}
+          {% endif %},
+          {% if shipping_address.city_province_zip != blank %}
+            {{ shipping_address.city_province_zip }}
+          {% endif %}          
+          {{ shipping_address.country_code }}
+        {% else %}
+          No shipping address
+        {% endif %}
+      </p>
+    </div>
+    <div class="billing-address">
+      <p class="subtitle-bold">{{ order.created_at | date: "%B %e, %Y" }}</p>
+    </div>
+    <!-- <div class="billing-address">
+      <p class="subtitle-bold to-uppercase">
+        Bill to
+      </p>
+      <p class="address-detail">
+        {% if billing_address != blank %}
+          {{ billing_address.name }}
+          {% if billing_address.company != blank %}
+            <br>
+            {{ billing_address.company }}
+          {% endif %}
+          <br>
+          {{ billing_address.address1 }}
+          {%  if billing_address.address2 != blank %}
+            <br>
+            {{ billing_address.address2 }}
+          {% endif %}
+          {% if billing_address.city_province_zip != blank %}
+            <br>
+            {{ billing_address.city_province_zip }}
+          {% endif %}
+          <br>
+          {{ billing_address.country }}
+        {% else %}
+          No billing address
+        {% endif %}
+      </p>
+    </div> -->
+  </div>
+  <!-- <hr> -->
+  <div class="order-container">
+    <div class="order-container-header">
+      <div class="order-container-header-left-content">
+        <p class="subtitle-bold subtitle-item-bold ">
+          Items
+        </p>
+      </div>
+      <div class="order-container-header-left-middle-content">
+        <p class="subtitle-bold subtitle-item-bold ">
+          Description
+        </p>
+      </div>
+      <div class="order-container-header-right-content">
+        <p class="subtitle-bold subtitle-item-bold ">
+          Qty
+        </p>
+      </div>
+    </div>
+
+     
+
+    {% for line_item in line_items_in_shipment %}
+       
+      <div class="flex-line-item">
+        <div class="flex-line-item-img">
+          {% if line_item.sku != blank %}
+              <span class="line-item-description-line">
+                {{ line_item.sku }} - 
+              </span>
+            {% endif %}         
+        </div>
+        <div class="flex-line-item-description">
+          <p>
+            <span class="line-item-description-line">
+              {{ line_item.title }} {% if line_item.variant_title != blank %} - {{ line_item.variant_title }}{% endif %}
+            </span>
+            
+          </p>
+        </div>
+        <div class="flex-line-item-quantity">
+          <p class="text-align-right">
+            {{ line_item.shipping_quantity }}
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% unless includes_all_line_items_in_order %}
+    <!-- <hr class="subdued-separator"> -->
+    <p class="missing-line-items-text ">
+      There are other items from your order not included in this shipment.
+    </p>
+  {% endunless %}
+<!--   <hr> -->
+  {% if order.note != blank %}
+    <div class="notes">
+      <p class="subtitle-bold to-uppercase">
+        Notes
+      </p>
+      <p class="notes-details">
+        {{ order.note }}
+      </p>
+    </div>
+  {% endif %}
+  <!--<div class="footer">
+    <p>
+      Thank you for shopping with us!
+    </p>
+    <p>
+      <strong>
+        {{ shop.name }}
+      </strong>
+      <br>
+      {{ shop_address.address1 }}, {{ shop_address.city }}, {{ shop_address.province_code }}, {{ shop_address.zip }}, {{ shop_address.country }}
+      <br>
+      {{ shop.email }}
+      <br>
+      {{ shop.domain }}
+    </p>
+  </div>-->
+</div>
+<style type="text/css">
+  body {
+    font-size: 30px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .wrapper {
+    width: 890px;
+    margin: auto;
+    padding: 0.5em;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 250;
+  }
+
+  .header {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+    margin-bottom: 0.5em;
+  }
+
+  .header p {
+    margin: 0;
+  }
+
+  .shop-title {
+    -webkit-box-flex: 5;
+    -webkit-flex: 5;
+    flex: 5;
+    /*font-size: 1.9em;*/
+  }
+
+  .order-title {
+    -webkit-box-flex: 5;
+    -webkit-flex: 5;
+    flex: 5;
+  }
+  .shipping-depertment{
+    display: flex;
+  }
+
+  .customer-addresses {
+    width: 100%;
+    display: inline-block;
+    margin: 0.5em 0;
+  }
+
+  .address-detail {
+    margin: 0.35em 0 0;
+    line-height: 1.5;
+    font-size: 0.8em;
+  }
+
+  .subtitle-bold {
+    font-weight: bold;
+    margin: 0;
+    font-size: 0.85em;
+  }
+
+  .to-uppercase {
+    text-transform: uppercase;
+  }
+
+  .text-align-right {
+    text-align: right;
+    max-width: 100%;
+  }
+
+  .shipping-address {
+    float: left;
+    max-width: 50%;
+  }
+
+  .billing-address {
+    padding-left: 10em;
+    min-width: 9em;
+  }
+
+  .order-container {
+    padding: 0 0.35em;
+  }
+
+  .order-container-header {
+    display: inline-block;
+    width: 100%;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+
+    border: 2px solid;
+    box-sizing: border-box;
+    padding: 5px;     
+  }
+
+  .order-container-header-left-content {
+    float: left;
+    width: 180px;
+  }
+
+  .order-container-header-right-content {
+    float: right;
+  }
+
+  .flex-line-item {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.7em 0;
+    page-break-inside: avoid;
+    font-size: 0.82em;
+
+    font-weight: 700;
+    margin: 3px 0;
+    text-transform: uppercase;
+  }
+
+  .flex-line-item-img {
+    margin-right: 0.7em;
+    width: 190px;
+    margin-right: 0;
+    min-width: inherit;
+    padding-left: 5px;
+  }
+
+  .flex-line-item-description {
+    -webkit-box-flex: 9;
+    -webkit-flex: 9;
+    flex: 9;
+  }
+
+  .line-item-description-line {
+    display: block;
+  }
+
+  .flex-line-item-description p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .flex-line-item-quantity {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding-right: 5px;
+  }
+
+  .subdued-separator {
+    height: 0.035em;
+    border: none;
+    color: lightgray;
+    background-color: lightgray;
+    margin: 0;
+  }
+
+  .missing-line-items-text {
+    margin: 0.7em 0;
+    padding: 0 0.35em;
+  }
+
+  .notes {
+    margin-top: 1em;
+  }
+
+  .notes p {
+    margin-bottom: 0;
+  }
+
+  .notes .notes-details {
+    margin-top: 0.35em;
+  }
+
+  .footer {
+    margin-top: 1em;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .footer p {
+    margin: 0;
+    margin-bottom: 0.7em;
+  }
+
+  hr {
+    height: 0.07em;
+    border: none;
+    color: black;
+    background-color: black;
+    margin: 0;
+  }
+
+  .aspect-ratio {
+    position: relative;
+    display: block;
+    background: #fafbfc;
+    padding: 0;
+  }
+
+  .aspect-ratio::before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid rgba(195,207,216,0.3);
+  }
+
+  .aspect-ratio--square {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+
+  .aspect-ratio__content {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+  }
+  .shipping-depertment {
+      font-size: 0.425em;
+      font-size: 0.8em;
+      margin-top: 0.33em;
+  }
+  .order-title .text-align-right{
+    font-size: 0.8em;
+  }
+  .order-title .packing-heading {
+      font-size: 1em;
+      font-weight: 700;
+  }
+  
+  .billing-address {
+    text-align: right;
+  }
+  .customer-addresses{
+    margin-bottom: 2em;
+  }
+  .order-container-header-left-middle-content {
+      float: left;
+  }
+  
+  .order-title .text-align-right {
+      min-width: inherit;
+  }
+  .subtitle-item-bold {
+      font-weight: bold;
+      margin: 0;
+      font-size: 0.87em;
+  }
+</style>
